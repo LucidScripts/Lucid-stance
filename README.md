@@ -161,17 +161,7 @@ I wanted something that felt modern in-game without turning into a bloated tunin
 
 Most stance scripts either stop at basic offsets or get annoying to maintain once you start changing things. This one keeps the editable stuff in the config, keeps the UI separate, and stays easy to tweak if you are running a live server and do not have time to babysit it.
 
-## Future Ideas
-
-- stance presets
-- location/job restrictions
-- item-based access
-- export hooks for garages/custom shops
-- wheel fitment presets per model
-
 ## License
 
 Use it, tweak it, ship it on your server.
 
-
-If you repost it publicly, at least leave the resource name and credit intact.
