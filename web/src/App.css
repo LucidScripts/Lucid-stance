@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: transparent;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.stance-panel {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  background: rgba(15, 15, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #e0e0e0;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  user-select: none;
+}
+
+.stance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stance-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stance-group {
+  margin-bottom: 16px;
+}
+
+.stance-group h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.stance-slider {
+  margin-bottom: 10px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.slider-value {
+  color: #7aa2f7;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7aa2f7;
+  cursor: pointer;
+  border: 2px solid rgba(15, 15, 20, 0.9);
+  transition: transform 0.1s;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7aa2f7;
+  cursor: pointer;
+  border: 2px solid rgba(15, 15, 20, 0.9);
+}
+
+.stance-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.btn-save {
+  background: #7aa2f7;
+  color: #0f0f14;
+}
+
+.btn-save:hover {
+  background: #5b8af0;
+}
+
+.btn-reset {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+}
+
+.btn-reset:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
