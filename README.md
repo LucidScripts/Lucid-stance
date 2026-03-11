@@ -121,15 +121,6 @@ Config.OwnerCheck = {
 
 If you do not want ownership restrictions at all, set `Config.OwnerOnly = false`.
 
-## Escrow Notes
-
-The manifest already includes `escrow_ignore` for the files you are most likely to edit:
-
-- [config.lua](config.lua)
-- [install/stance.sql](install/stance.sql)
-
-If you package this with asset escrow later, those stay editable.
-
 ## Web UI Workflow
 
 Source lives in [web/src](web/src).
@@ -181,5 +172,6 @@ Most stance scripts either stop at basic offsets or get annoying to maintain onc
 ## License
 
 Use it, tweak it, ship it on your server.
+
 
 If you repost it publicly, at least leave the resource name and credit intact.
