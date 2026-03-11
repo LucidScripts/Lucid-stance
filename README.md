@@ -2,8 +2,6 @@
 
 A clean stance editor for FiveM with a React NUI, live preview, per-vehicle saves, and separate front/rear track width.
 
-Built for people who want something simple to use in-game and simple to maintain in a real server folder.
-
 ## What It Does
 
 - Opens a stance menu with `/stance`
@@ -164,4 +162,5 @@ Most stance scripts either stop at basic offsets or get annoying to maintain onc
 ## License
 
 Use it, tweak it, ship it on your server.
+
 
