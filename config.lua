@@ -3,6 +3,14 @@ Config = {}
 Config.Command = 'stance'
 Config.OwnerOnly = true -- Only let the owner adjust it.
 
+Config.OwnerCheck = {
+    Framework = 'auto', -- auto, qbox, qbcore, esx, custom
+    VehicleTable = nil,
+    PlateColumn = 'plate',
+    OwnerColumn = nil,
+    GetIdentifier = nil,
+}
+
 Config.Defaults = {
     camber_front = 0.0,
     camber_rear  = 0.0,

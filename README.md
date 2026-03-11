@@ -74,6 +74,13 @@ Config.Command = 'stance'
 Config.OwnerOnly = true
 ```
 
+Owner check supports:
+
+- Qbox
+- QBCore
+- ESX
+- custom setups through `Config.OwnerCheck`
+
 Current slider limits:
 
 ```lua
@@ -90,12 +97,38 @@ If you want more or less travel, just change the config and restart the resource
 
 ## Ownership Check
 
-When `Config.OwnerOnly = true`, the script checks `player_vehicles` using the player's `citizenid` before opening the menu.
+When `Config.OwnerOnly = true`, the script will try to detect your framework and use the right ownership lookup automatically.
 
-If your server does not use that table layout, either:
+Default mappings:
 
-- change the query in [server/main.lua](server/main.lua)
-- or set `Config.OwnerOnly = false`
+- Qbox: `player_vehicles.plate -> citizenid`
+- QBCore: `player_vehicles.plate -> citizenid`
+- ESX: `owned_vehicles.plate -> owner`
+
+If your setup is different, you can override it in [config.lua](config.lua):
+
+```lua
+Config.OwnerCheck = {
+  Framework = 'custom',
+  VehicleTable = 'your_vehicle_table',
+  PlateColumn = 'plate',
+  OwnerColumn = 'owner_identifier',
+  GetIdentifier = function(src)
+    return GetPlayerIdentifierByType(src, 'license')
+  end,
+}
+```
+
+If you do not want ownership restrictions at all, set `Config.OwnerOnly = false`.
+
+## Escrow Notes
+
+The manifest already includes `escrow_ignore` for the files you are most likely to edit:
+
+- [config.lua](config.lua)
+- [install/stance.sql](install/stance.sql)
+
+If you package this with asset escrow later, those stay editable.
 
 ## Web UI Workflow
 
@@ -148,6 +181,5 @@ Most stance scripts either stop at basic offsets or get annoying to maintain onc
 ## License
 
 Use it, tweak it, ship it on your server.
-
 
 If you repost it publicly, at least leave the resource name and credit intact.

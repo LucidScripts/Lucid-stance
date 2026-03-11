@@ -13,6 +13,114 @@ local function normalizeStance(row)
     }
 end
 
+local function getOwnerCheckConfig()
+    return Config.OwnerCheck or {}
+end
+
+local function sanitizeIdentifier(value)
+    if type(value) ~= 'string' or value == '' then return nil end
+    if not value:match('^[%w_]+$') then return nil end
+    return value
+end
+
+local function detectFramework()
+    local ownerCheck = getOwnerCheckConfig()
+    local configured = ownerCheck.Framework
+
+    if type(configured) == 'string' and configured ~= '' and configured ~= 'auto' then
+        return string.lower(configured)
+    end
+
+    if GetResourceState('qbx_core') == 'started' then
+        return 'qbox'
+    end
+
+    if GetResourceState('qb-core') == 'started' then
+        return 'qbcore'
+    end
+
+    if GetResourceState('es_extended') == 'started' then
+        return 'esx'
+    end
+
+    if type(ownerCheck.GetIdentifier) == 'function' then
+        return 'custom'
+    end
+
+    return 'unknown'
+end
+
+local function getOwnerQuerySettings(framework)
+    local ownerCheck = getOwnerCheckConfig()
+    local defaults = {
+        qbox = { vehicleTable = 'player_vehicles', plateColumn = 'plate', ownerColumn = 'citizenid' },
+        qbcore = { vehicleTable = 'player_vehicles', plateColumn = 'plate', ownerColumn = 'citizenid' },
+        esx = { vehicleTable = 'owned_vehicles', plateColumn = 'plate', ownerColumn = 'owner' },
+    }
+
+    local frameworkDefaults = defaults[framework] or {}
+
+    return {
+        vehicleTable = sanitizeIdentifier(ownerCheck.VehicleTable or frameworkDefaults.vehicleTable),
+        plateColumn = sanitizeIdentifier(ownerCheck.PlateColumn or frameworkDefaults.plateColumn),
+        ownerColumn = sanitizeIdentifier(ownerCheck.OwnerColumn or frameworkDefaults.ownerColumn),
+    }
+end
+
+local function getPlayerIdentifier(src, framework)
+    local ownerCheck = getOwnerCheckConfig()
+
+    if type(ownerCheck.GetIdentifier) == 'function' then
+        return ownerCheck.GetIdentifier(src)
+    end
+
+    if framework == 'qbox' then
+        local player = exports.qbx_core:GetPlayer(src)
+        return player and player.PlayerData and player.PlayerData.citizenid or nil
+    end
+
+    if framework == 'qbcore' then
+        local qb = exports['qb-core']:GetCoreObject()
+        local player = qb and qb.Functions and qb.Functions.GetPlayer(src)
+        return player and player.PlayerData and player.PlayerData.citizenid or nil
+    end
+
+    if framework == 'esx' then
+        local esx = exports['es_extended']:getSharedObject()
+        local player = esx and esx.GetPlayerFromId and esx.GetPlayerFromId(src)
+        return player and player.identifier or nil
+    end
+
+    return nil
+end
+
+local function isOwner(src, plate)
+    if not Config.OwnerOnly then
+        return true
+    end
+
+    local framework = detectFramework()
+    local settings = getOwnerQuerySettings(framework)
+    local identifier = getPlayerIdentifier(src, framework)
+
+    if not identifier then
+        return false, 'Ownership check could not resolve a player identifier. Set OwnerOnly false or configure Config.OwnerCheck.'
+    end
+
+    if not settings.vehicleTable or not settings.plateColumn or not settings.ownerColumn then
+        return false, 'Ownership check table settings are invalid. Check Config.OwnerCheck.'
+    end
+
+    local query = ('SELECT 1 FROM `%s` WHERE `%s` = ? AND `%s` = ? LIMIT 1'):format(
+        settings.vehicleTable,
+        settings.plateColumn,
+        settings.ownerColumn
+    )
+
+    local owned = MySQL.scalar.await(query, { plate, identifier })
+    return owned and true or false, nil
+end
+
 local function ensureSchema()
     MySQL.query.await([[
         CREATE TABLE IF NOT EXISTS `lucid_stance` (
@@ -65,17 +173,11 @@ RegisterNetEvent('lucid-stance:server:requestStance', function(plate)
     if not plate or plate == '' then return end
 
     if Config.OwnerOnly then
-        local player = exports.qbx_core:GetPlayer(src)
-        if not player then return end
-        local citizenid = player.PlayerData.citizenid
-        local owned = MySQL.scalar.await(
-            'SELECT 1 FROM player_vehicles WHERE plate = ? AND citizenid = ?',
-            { plate, citizenid }
-        )
+        local owned, reason = isOwner(src, plate)
         if not owned then
             TriggerClientEvent('ox_lib:notify', src, {
                 type = 'error',
-                description = 'You do not own this vehicle.'
+                description = reason or 'You do not own this vehicle.'
             })
             return
         end
