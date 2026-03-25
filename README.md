@@ -1,4 +1,6 @@
 # lucid-stance
+<img width="321" height="477" alt="UI" src="https://github.com/user-attachments/assets/00aa1d7a-0a4b-4e20-8c9e-19b3b8e18281" />
+<img width="1797" height="1005" alt="Capture" src="https://github.com/user-attachments/assets/d597d77a-8869-42db-84e9-60d91f469dd2" />
 
 A clean stance editor for FiveM with a React NUI, live preview, per-vehicle saves, and separate front/rear track width.
 
